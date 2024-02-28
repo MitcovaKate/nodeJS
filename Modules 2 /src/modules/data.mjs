@@ -3,4 +3,8 @@ const products = [
   { name: "Another Product 2", price: 2100 },
   { name: "Yep ,Product 3", price: 455600 },
 ];
-export default { products };
+const cart={
+  items:[]
+}
+export default { products, cart};
+
