@@ -53,19 +53,45 @@ cart.items.forEach((item,idx)=>{
        console.log("2. Change quantity");
        console.log("3. Checkout");
        console.log("0. Exit to main menu");
-
+       console.log("==========");
        io.question("choose > ",answer=>{
         let option =parseInt(answer)
          if (isNaN(option)) {
            console.error("It is not a number!");
            return;
          }
+       
          switch(option){
           case 1:
-            
+            io.question("What product do you want to delete > ", answer => {
+              let option = parseInt(answer);
+          
+          if (option < 1 || option > cart.items.length) {
+              console.error("Invalid option!");
+              return;
+            }
+            cart.items.splice(option - 1, 1);
+            console.log("Item removed successfully!");
+            renderCart(cart);
+          });
                  break;
           case 2:
-        
+            io.question("Which product's quantity do you want to change > ", answer => {
+              let option = parseInt(answer);
+              if (isNaN(option)) {
+                console.error("It is not a number!");
+                return;
+              }
+              if (option < 1 || option > cart.items.length) {
+                console.error("Invalid option!");
+                return;
+              }
+              io.question("Enter new quantity > ", newQuantity => {
+              let quantity = parseInt(newQuantity);
+              cart.items[option - 1].q = quantity;
+              renderCart(cart);
+            })
+          });
           break;
           case 3:
         
@@ -79,6 +105,7 @@ cart.items.forEach((item,idx)=>{
          }
       })
 }
+
 
 const renderCatatlog = (products,confirmCB) => {
   console.clear();
