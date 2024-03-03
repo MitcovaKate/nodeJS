@@ -6,5 +6,5 @@ const products = [
 const cart={
   items:[]
 }
-export default { products, cart};
+export { products, cart};
 
