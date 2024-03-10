@@ -1,6 +1,8 @@
-import { products,cart } from "./data.mjs";
-import {helper} from "./helper.mjs";
 import readline from 'readline'
+
+import { getProducts,getCart, saveCart} from "./data.mjs";
+import {helper} from "./helper.mjs";
+
 
 const io=readline.createInterface(
   {
@@ -17,36 +19,37 @@ console.log("==========");
 console.log("1. Catalog");
 console.log("2. Cart");
 console.log("0. Exit");
-io.question("choose > ",answer=>{
-  let option =parseInt(answer)
-   if (isNaN(option)) {
-     console.error("It is not a number!");
-     return;
-   }
-   switch(option){
-    case 1:
-       renderCatatlog(products,(n,product,q)=>{
-          cart.items.push({ n, product, q });
-          renderMainMenu()
-    }) 
+io.question("choose > ", async (answer) => {
+  let option = parseInt(answer)
+  switch(option) {
+      case 1:
+          let cart = await getCart();
+          renderCart(cart, 'info')
+          let products = await getProducts();
+          renderCatalog(products, async (n, product, q) => {
+              cart.items.push({ n, product, q })
+              const saved = await saveCart(cart)
+              renderMainMenu();
+          });
            break;
     case 2:
-      renderCart(cart)
-    break;
-    case 0:
-      io.close();
-          break;
-   }
-})
+      let loadCart = await getCart();
+      renderCart(loadCart, 'option')
+      break;
+  case 0:
+      io.close() 
+      break;
+}
+});
 }
 
-const renderCart=(cart)=>{
+const renderCart=(cart,view)=>{
   console.clear();
 console.log("==========");
 console.log("CART");
 console.log("=========="); 
 cart.items.forEach((item,idx)=>{
-       console.log(idx+1,item.product.name,item.q)
+       console.log(idx + 1,item.product.name,item.q)
        });
        console.log("==========");
        console.log("1. Remove item");
@@ -97,15 +100,17 @@ cart.items.forEach((item,idx)=>{
         
           break;
           case 0:
-            renderCatatlog(products,(n,product,q)=>{
-              cart.items.push({ n, product, q });
-              renderMainMenu()
-        }) 
+            console.clear()
+            getProducts((products)=>{
+              renderCatatlog(products,(n,product,q)=>{
+                 cart.items.push({ n, product, q });
+                 renderMainMenu()
+           })
+          })
                 break;
          }
       })
 }
-
 
 const renderCatatlog = (products,confirmCB) => {
   console.clear();
@@ -156,4 +161,4 @@ helper("Catalog:");
   });
 };
 
-export  { renderCatatlog ,renderMainMenu};
+export  {renderCatatlog, renderMainMenu, renderCart};
