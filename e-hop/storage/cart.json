@@ -1,0 +1,36 @@
+{
+    "items": [
+      {
+        "n": 1,
+        "product": {
+          "name": "Some Product 1",
+          "price": 100
+        },
+        "q": "3"
+      },
+      {
+        "n": 1,
+        "product": {
+          "name": "Some Product 1",
+          "price": 100
+        },
+        "q": 1
+      },
+      {
+        "n": 1,
+        "product": {
+          "name": "Some Product 1",
+          "price": 100
+        },
+        "q": 1
+      },
+      {
+        "n": 2,
+        "product": {
+          "name": "Another Product 2",
+          "price": 200
+        },
+        "q": 2
+      }
+    ]
+  }
