@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WELCOME TO e-shop</title>
+</head>
+<body>
+
+    <h1>WELCOME TO e-shop</h1>
+    <div>
+        <!-- {% CATALOG %} -->
+        <ul>
+        {% for product in products %}
+        <li>
+            <h2>{{product.name}}</h2>
+            <img src="/images/{{product:image}}">
+            <div>
+                {{product.price}}
+            </div>
+            <a href="/buy/{{product.id}}">BUY</a>
+        </li>
+        
+        {% endfor %}
+    </ul>
+    </div>
+    
+</body>
+</html>
