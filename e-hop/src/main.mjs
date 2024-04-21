@@ -1,6 +1,6 @@
 import http from 'node:http'
 import querystring from 'node:querystring'
-import { getProducts,getProductByID, saveOrder } from './modules/data.mjs'
+import { getProducts,getProductByID, saveOrder,confirmOrder} from './modules/data.mjs'
 
 import {render} from './modules/template.mjs'
 import { readFile } from 'node:fs'
@@ -39,8 +39,8 @@ const productStripe= await stripe.products.create({
   name:product.name,
 });
 const price = await stripe.prices.create({
-currency:"usd",
-unit_amount:product.price * 100,
+currency:product.price.currency,
+unit_amount:product.price_amount * 100,
 product:productStripe.id,
 });
 const paymentLink = await stripe.paymentLinks.create({line_items:[
@@ -48,11 +48,24 @@ const paymentLink = await stripe.paymentLinks.create({line_items:[
     price:price.id,
     quantity:1,
   },
-]})
+],
+after_completion:{
+  redirect:{
+    url:`http://localhost:3000/confirm?id=${data.id}`,
+  },
+  type:"redirect"
+},
+
+})
 ///////////////////////////////
 
 html= `You will be rederected to stripe in 3 sec <a href="${paymentLink.url}">here</a>`;
-res.setHeader("Refresh", `0 ; URL=${paymentLink.url}`);
+res.setHeader("Refresh", `3 ; URL=${paymentLink.url}`);
+
+}else if(req.url.startsWith("/confirm")){
+let parameters =req.url.split("?");
+let data =querystring.parse(parameters[1]);
+await confirmOrder(data.id)
 }
   else {
         html=`Oops, not found ;(`
