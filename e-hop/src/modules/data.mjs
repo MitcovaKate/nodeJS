@@ -55,4 +55,7 @@ const saveOrder = async (order) => {
               VALUES(${order.id},${order.productId},${order.fullName}, ${order.emailAddress},${order.phonenumber})`;
 };
 
-export { getProducts,getProductByID,saveOrder}
+const confirmOrder = async (order) => {
+    await sql`UPDATE orders SET payed =true WHERE id = ${id};`;
+};
+export { getProducts,getProductByID,saveOrder,confirmOrder}
